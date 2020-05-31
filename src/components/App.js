@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Link, Route} from 'react-router'
 import { connect } from 'react-redux'
 import { handleInitialData } from '../actions/shared'
-import AuthedUser  from './authedUser';
-import Questions  from './questions';
+import AuthedUser  from './authedUser'
+import Questions  from './questions'
+import LoadingBar from 'react-redux-loading'
 
 class App extends Component {
     componentDidMount() {
@@ -16,9 +17,14 @@ class App extends Component {
              
         return (
             <div>
-                <Route exact path='/'>
-                    {home}
-                </Route>
+                <LoadingBar />
+                {this.props.loading === true ?
+                    null
+                    :
+                    <Route exact path='/'>
+                        {home}
+                    </Route>
+                }
             </div>
         );
     }
