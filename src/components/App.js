@@ -1,31 +1,47 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link, Route} from 'react-router'
 import { connect } from 'react-redux'
 import { handleInitialData } from '../actions/shared'
-import AuthedUser  from './authedUser'
-import Questions  from './questions'
+import AuthedUser  from './AuthedUser'
+import Questions  from './Questions'
 import LoadingBar from 'react-redux-loading'
+import Nav from './Nav'
+import Leaderboard from './Leaderboard'
 
 class App extends Component {
     componentDidMount() {
         this.props.dispatch(handleInitialData());
     }
     render() {
-        const home = this.props.authedUser === "" ? <AuthedUser /> : <Questions />;
-        /*let home = <AuthedUser/>;
-        if ((this.props.authedUser !== "") && (home = <div><p>empty for now</p></div>));*/
+        let home;
+        let nav = '';
+        if (this.props.authedUser === "") {
+            home = <AuthedUser />;
+        } else {
+            home = <Questions />;
+            nav = <Nav />;
+        }
+        // const home =  ? <AuthedUser /> : <Questions />;
              
         return (
-            <div>
+            <Fragment>
                 <LoadingBar />
-                {this.props.loading === true ?
-                    null
-                    :
-                    <Route exact path='/'>
-                        {home}
-                    </Route>
-                }
-            </div>
+                <div className='container'>
+                    {this.props.loading === true ?
+                        null
+                        :
+                        <div>
+                            {nav}
+                            <Route exact path='/'>
+                                {home}
+                            </Route>
+                            <Route path='/leaderboard'>
+                                <Leaderboard />
+                            </Route>
+                        </div>
+                    }
+                </div>
+            </Fragment>
         );
     }
 }
