@@ -3,15 +3,16 @@ import { Link, Route} from 'react-router'
 import { connect } from 'react-redux'
 import { handleInitialData } from '../actions/shared'
 import AuthedUser  from './authedUser';
-// import Polls  from './polls';
+import Questions  from './questions';
 
 class App extends Component {
     componentDidMount() {
         this.props.dispatch(handleInitialData());
     }
     render() {
-        let home = <AuthedUser/>;
-        if ((this.props.authedUser !== "") && (home = <div><p>empty for now</p></div>));
+        const home = this.props.authedUser === "" ? <AuthedUser /> : <Questions />;
+        /*let home = <AuthedUser/>;
+        if ((this.props.authedUser !== "") && (home = <div><p>empty for now</p></div>));*/
              
         return (
             <div>
