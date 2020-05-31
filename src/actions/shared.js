@@ -13,7 +13,7 @@ export function handleInitialData () {
     }
 }
 
-export function handleauthedUser (authedUser) {
+export function handleSetAuthedUser (authedUser) {
     return (dispatch) => {
         dispatch(setAuthedUser(authedUser))
     }
