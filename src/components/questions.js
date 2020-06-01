@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import Question, { QUESTION_ROLE_ANSWERED, QUESTION_ROLE_UNANSWERED, QUESTION_ROLE_TO_ANSWER} from './Question'
 
 class Questions extends Component {
   render() {
@@ -9,8 +10,10 @@ class Questions extends Component {
         <ul className='dashboard-list'>
           {this.props.questionIds.map((id) => (
             <li key={id}>
-              {/*<Tweet id={id}/>*/}
-              {id}
+              <Question 
+                id={id}
+                questionRole={QUESTION_ROLE_UNANSWERED}/>
+              {/*id*/}
             </li>
           ))}
         </ul>

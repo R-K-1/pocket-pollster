@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Link, Route} from 'react-router'
+import { Route} from 'react-router'
 import { connect } from 'react-redux'
 import { handleInitialData } from '../actions/shared'
 import AuthedUser  from './AuthedUser'
@@ -13,19 +13,23 @@ class App extends Component {
     componentDidMount() {
         this.props.dispatch(handleInitialData());
     }
-    render() {
-        let home;
-        let nav = '';
-        let authedUserBar = '';
-        if (this.props.authedUser === "") {
-            home = <AuthedUser />;
-        } else {
-            home = <Questions />;
-            nav = <Nav />;
-            authedUserBar = <AuthedUserBar />;
-        }
-        // const home =  ? <AuthedUser /> : <Questions />;
-             
+    handleAppContent() {
+        return this.props.authedUser === "" ?
+            <AuthedUser />
+            :
+            (<div>
+                <AuthedUserBar />
+                <Nav />
+                <Route exact path='/'>
+                    <Questions />
+                </Route>
+                <Route path='/leaderboard'>
+                    <Leaderboard />
+                </Route>
+            </div>);
+
+    }
+    render() {            
         return (
             <Fragment>
                 <LoadingBar />
@@ -33,16 +37,7 @@ class App extends Component {
                     {this.props.loading === true ?
                         null
                         :
-                        <div>
-                            {authedUserBar}
-                            {nav}
-                            <Route exact path='/'>
-                                {home}
-                            </Route>
-                            <Route path='/leaderboard'>
-                                <Leaderboard />
-                            </Route>
-                        </div>
+                        this.handleAppContent()
                     }
                 </div>
             </Fragment>
@@ -57,3 +52,14 @@ function mapStateToProps ({ authedUser }) {
 }
 
 export default connect(mapStateToProps)(App);
+
+{/*<div>
+    {authedUserBar}
+    {nav}
+    <Route exact path='/'>
+        {home}
+    </Route>
+    <Route path='/leaderboard'>
+        <Leaderboard />
+    </Route>
+</div>*/}
