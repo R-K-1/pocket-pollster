@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { handleClearAuthedUser } from '../actions/shared'
 
 class AuthedUserBar extends Component {
+    handleLogout = () => {
+        this.props.dispatch(handleClearAuthedUser());
+    }
     AuthedUserBarContent = () => {
         return this.props.user === undefined?
             ''
@@ -15,13 +19,15 @@ class AuthedUserBar extends Component {
                             className='avatar'
                         />
                     </li>
-                    <li><button>Log out</button></li>
+                    <li>
+                        <button onClick={() => this.handleLogout()}>
+                            Log out
+                        </button>
+                    </li>
                 </ul>
             </nav>);
     }
     render () {
-        // const user = this.props.user;
-        console.log('bars', this.props);
         return (
             <nav className='nav'>
                 {this.AuthedUserBarContent()}
@@ -37,7 +43,3 @@ function mapStateToProps ({ users, authedUser }) {
 }
 
 export default connect(mapStateToProps)(AuthedUserBar);
-
-                            /*src={user.avatarURL}
-                            alt={`Avatar of ${user.name}`}
-                            className='avatar'*/

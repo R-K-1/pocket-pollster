@@ -1,7 +1,7 @@
 import { getInitialData } from '../utils/api'
 import { receiveUsers } from '../actions/users'
 import { receiveQuestions } from '../actions/questions'
-import { setAuthedUser } from '../actions/authedUser'
+import { setAuthedUser, clearAuthedUser } from '../actions/authedUser'
 import { showLoading, hideLoading} from 'react-redux-loading'
 
 
@@ -21,5 +21,11 @@ export function handleInitialData () {
 export function handleSetAuthedUser (authedUser) {
     return (dispatch) => {
         dispatch(setAuthedUser(authedUser))
+    }
+}
+
+export function handleClearAuthedUser () {
+    return (dispatch) => {
+        dispatch(clearAuthedUser())
     }
 }
