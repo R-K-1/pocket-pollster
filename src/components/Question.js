@@ -15,10 +15,29 @@ class Question extends Component {
         // todo: Handle Like Tweet
     }
     radioButtonMaker(value, checked, disabled, stats) {
-        let text = value === 'optionOne' ?
+        let text = value === QUESTION_OPTION_ONE ?
                                 this.props.question.optionOne.text
                                 :
                                 this.props.question.optionTwo.text
+
+        if (stats) {
+            const totalVoters = this.props.question.optionOne.votes.length +
+                                    this.props.question.optionTwo.votes.length
+            let optionVoters;
+            let percentageOfVoters;
+            if (stats && value === QUESTION_OPTION_ONE) {
+                optionVoters = this.props.question.optionOne.votes.length;
+                percentageOfVoters = ((optionVoters / totalVoters) * 100)
+            } else if (stats && value === QUESTION_OPTION_TWO) {
+                optionVoters = this.props.question.optionTwo.votes.length;
+                percentageOfVoters = ((optionVoters / totalVoters) * 100)
+            }
+
+            text += `|#:${optionVoters}|%:${percentageOfVoters}`
+
+            if (checked) text += "|My Choice"
+        }
+
         return (
             <label>
                 <input
@@ -41,7 +60,13 @@ class Question extends Component {
                                     </div>)
                 break
             case QUESTION_ROLE_ANSWERED:
-                optionsContent = ''
+                const isOptionOneChosen = this.props.question.optionOne.votes.includes(this.props.question.author)
+                const isOptionTwoChosen = !isOptionOneChosen
+                optionsContent = (  <div>
+                                        {this.radioButtonMaker(QUESTION_OPTION_ONE, isOptionOneChosen, true, true)}
+                                        <br></br>
+                                        {this.radioButtonMaker(QUESTION_OPTION_TWO, isOptionTwoChosen, true, true)}
+                                    </div>)
                 break
             case QUESTION_ROLE_TO_ANSWER:
                 optionsContent = ''
@@ -113,12 +138,6 @@ function mapStateToProps({ authedUser, users, questions }, { id, questionRole })
         questionRole : questionRole,
     }
 
-    /*return {
-        authedUser,
-        questions: question
-            ? formatTweet(tweet, users[tweet.author], authedUser, parentTweet)
-            : null
-    }*/
     return {
         question: question
             ? question

@@ -13,7 +13,6 @@ class Questions extends Component {
                             <Question
                                 id={id}
                                 questionRole={QUESTION_ROLE_UNANSWERED} />
-                            {/*id*/}
                         </li>
                     ))}
                 </ul>
@@ -23,8 +22,7 @@ class Questions extends Component {
                         <li key={id}>
                             <Question
                                 id={id}
-                                questionRole={QUESTION_ROLE_UNANSWERED} />
-                            {/*id*/}
+                                questionRole={QUESTION_ROLE_ANSWERED} />
                         </li>
                     ))}
                 </ul>
