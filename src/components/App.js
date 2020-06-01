@@ -6,6 +6,7 @@ import AuthedUser  from './AuthedUser'
 import Questions  from './Questions'
 import LoadingBar from 'react-redux-loading'
 import Nav from './Nav'
+import AuthedUserBar from './AuthedUserBar'
 import Leaderboard from './Leaderboard'
 
 class App extends Component {
@@ -15,11 +16,13 @@ class App extends Component {
     render() {
         let home;
         let nav = '';
+        let authedUserBar = '';
         if (this.props.authedUser === "") {
             home = <AuthedUser />;
         } else {
             home = <Questions />;
             nav = <Nav />;
+            authedUserBar = <AuthedUserBar />;
         }
         // const home =  ? <AuthedUser /> : <Questions />;
              
@@ -31,6 +34,7 @@ class App extends Component {
                         null
                         :
                         <div>
+                            {authedUserBar}
                             {nav}
                             <Route exact path='/'>
                                 {home}
