@@ -8,6 +8,7 @@ import LoadingBar from 'react-redux-loading'
 import Nav from './Nav'
 import AuthedUserBar from './AuthedUserBar'
 import Leaderboard from './Leaderboard'
+import Question from './Question'
 
 class App extends Component {
     componentDidMount() {
@@ -20,12 +21,9 @@ class App extends Component {
             (<div>
                 <AuthedUserBar />
                 <Nav />
-                <Route exact path='/'>
-                    <Questions />
-                </Route>
-                <Route path='/leaderboard'>
-                    <Leaderboard />
-                </Route>
+                <Route exact path='/' component={Questions} />
+                <Route path='/leaderboard' component={Leaderboard} />
+                <Route exact path='/questions/:question_id' component={Question} />
             </div>);
 
     }
