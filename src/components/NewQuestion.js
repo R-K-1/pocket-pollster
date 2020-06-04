@@ -17,6 +17,7 @@ class NewQuestion extends Component {
                 author
             })
             this.props.dispatch(handleAddQuestion(this.props.questions, newQuestion))
+            this.props.history.push('/')
         } else {
             alert('Please enter valid options')
         }
