@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import Question, { QUESTION_ROLE_ANSWERED, QUESTION_ROLE_UNANSWERED, QUESTION_ROLE_TO_ANSWER } from './Question'
+import Question, { QUESTION_ROLE_ANSWERED, QUESTION_ROLE_UNANSWERED } from './Question'
 
 class Questions extends Component {
     constructor(props) {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter} from 'react-router-dom'
-import { formatTweet, formatDate } from '../utils/helpers'
+import { handleAnswerQuestion} from '../actions/shared'
 
 export const QUESTION_ROLE_UNANSWERED = 'QUESTION_ROLE_UNANSWERED'
 export const QUESTION_ROLE_ANSWERED = 'QUESTION_ROLE_ANSWERED'
@@ -10,20 +10,44 @@ export const QUESTION_OPTION_ONE = 'optionOne'
 export const QUESTION_OPTION_TWO = 'optionTwo'
 
 class Question extends Component {
-    handleLike = (e) => {
-        e.preventDefault()
 
-        // todo: Handle Like Tweet
+    constructor(props) {
+        super(props)
+        this.state = {
+            optionOneSelected: false,
+            optionTwoSelected: false
+        }
+    
+        this.handleSelectOption = this.handleSelectOption.bind(this);
     }
     handleSelectOption (e) {
-        e.preventDefault();
-        if (this.state) console.log(e.target);
+        if (e.target.id === QUESTION_OPTION_ONE) {
+            this.setState({
+                optionOneSelected: e.target.checked,
+            })
+        } else {
+            this.setState({
+                optionTwoSelected: e.target.checked
+            })
+        }
     }
-    radioButtonMaker(value, checked, disabled, stats, question) {
-        let text = value === QUESTION_OPTION_ONE ?
-                                question.optionOne.text
-                                :
-                                question.optionTwo.text
+    radioButtonMaker(value, isCheked ,disabled, stats, question) {
+        let text, id, checked
+        if (value === QUESTION_OPTION_ONE) {
+            text = question.optionOne.text
+            id = QUESTION_OPTION_ONE
+            checked = this.state.optionOneSelected
+        } else if (value === QUESTION_OPTION_TWO) {
+            text = question.optionTwo.text
+            id = QUESTION_OPTION_TWO
+            checked = this.state.optionTwoSelected
+        }
+
+        if (question.questionRole === QUESTION_ROLE_ANSWERED) {
+            checked = isCheked
+        } else if (question.questionRole === QUESTION_ROLE_UNANSWERED) {
+            checked = false
+        }
 
         if (stats) {
             const totalVoters = question.optionOne.votes.length +
@@ -48,6 +72,7 @@ class Question extends Component {
                 <input
                 type="radio"
                 name='question-options'
+                id={id}
                 checked={checked}
                 disabled={disabled}
                 value={value}
@@ -63,18 +88,18 @@ class Question extends Component {
         switch (question.questionRole) {
             case QUESTION_ROLE_UNANSWERED:
                 optionsContent = (  <div>
-                                        {this.radioButtonMaker(QUESTION_OPTION_ONE, false, true, false, question)}
+                                        {this.radioButtonMaker(QUESTION_OPTION_ONE,false, true, false, question)}
                                         <br />
                                         {this.radioButtonMaker(QUESTION_OPTION_TWO, false, true, false, question)}
                                     </div>)
                 break
             case QUESTION_ROLE_ANSWERED:
-                const isOptionOneChosen = question.optionOne.votes.includes(question.author)
-                const isOptionTwoChosen = !isOptionOneChosen
+                const optionOneSelected = question.optionOne.votes.includes(question.author)
+                const optionTwoSelected = !optionOneSelected
                 optionsContent = (  <div>
-                                        {this.radioButtonMaker(QUESTION_OPTION_ONE, isOptionOneChosen, true, true, question)}
+                                        {this.radioButtonMaker(QUESTION_OPTION_ONE, optionOneSelected, true, true, question)}
                                         <br />
-                                        {this.radioButtonMaker(QUESTION_OPTION_TWO, isOptionTwoChosen, true, true, question)}
+                                        {this.radioButtonMaker(QUESTION_OPTION_TWO, optionTwoSelected, true, true, question)}
                                     </div>)
                 break
             case QUESTION_ROLE_TO_ANSWER:
@@ -94,11 +119,21 @@ class Question extends Component {
         e.preventDefault();
         props.history.push(`questions/${props.question.id}`)
     }
-    handleSubmitAnswer() {
-
+    handleSubmitAnswer(e, props, state) {
+        if (state.optionOneSelected || state.optionTwoSelected) {
+            const pathName = props.location.pathname
+            const questionId = pathName.substring(pathName.lastIndexOf('/') + 1)
+            const optionSelected = state.optionOneSelected ? 'optionOne' : 'optionTwo'
+            let question = props.questions[questionId]
+            question[optionSelected].votes.push(props.authedUser)
+            props.dispatch(handleAnswerQuestion(props.questions, question))
+            props.history.push('/')
+        } else {
+            alert('Please select an answer before submitting');
+        }
     }
     formButtonMaker(text, handler) {
-        return (<button onClick={(e) => handler(e, this.props)}>
+        return (<button onClick={(e) => handler(e, this.props, this.state)}>
                     {text}
                 </button>)
     }
@@ -112,7 +147,7 @@ class Question extends Component {
                 buttonContent = ''
                 break
             case QUESTION_ROLE_TO_ANSWER:
-                buttonContent = ''
+                buttonContent = this.formButtonMaker("Submit", this.handleSubmitAnswer)
                 break
             default:
                 break
@@ -141,7 +176,7 @@ class Question extends Component {
         }
         
         if (render404) return <div>404 Question not found</div>
-
+        console.log('render again');
         return (
             <div className='question'>
                 <img
@@ -177,11 +212,13 @@ function mapStateToProps({ authedUser, users, questions }, { id, questionRole })
                                 question 
                                 : 
                                 null,
-                        isQuestionDefined: true}
+                        isQuestionDefined: true,
+                        authedUser}
     } else {
         addToProps = {isQuestionDefined: false,
                         users,
-                        questions}
+                        questions,
+                        authedUser}
     }
     return addToProps;
 }
