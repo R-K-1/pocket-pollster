@@ -9,6 +9,7 @@ import Nav from './Nav'
 import AuthedUserBar from './AuthedUserBar'
 import Leaderboard from './Leaderboard'
 import Question from './Question'
+import NewQuestion from './NewQuestion'
 
 class App extends Component {
     componentDidMount() {
@@ -23,7 +24,8 @@ class App extends Component {
                 <Nav />
                 <Route exact path='/' component={Questions} />
                 <Route path='/leaderboard' component={Leaderboard} />
-                <Route exact path='/questions/:question_id' component={Question} />
+                <Route path='/questions/:question_id' component={Question} />
+                <Route path='/add' component={NewQuestion} />
             </div>);
 
     }
@@ -50,14 +52,3 @@ function mapStateToProps ({ authedUser }) {
 }
 
 export default connect(mapStateToProps)(App);
-
-{/*<div>
-    {authedUserBar}
-    {nav}
-    <Route exact path='/'>
-        {home}
-    </Route>
-    <Route path='/leaderboard'>
-        <Leaderboard />
-    </Route>
-</div>*/}
