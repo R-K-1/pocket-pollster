@@ -169,7 +169,7 @@ class Question extends Component {
                 render404 = false
                 const questionRole = (this.props.questions[questionId].optionOne.votes.includes(authedUser) || 
                     this.props.questions[questionId].optionTwo.votes.includes(authedUser)) ?
-                    QUESTION_ROLE_ANSWERED : QUESTION_ROLE_UNANSWERED
+                    QUESTION_ROLE_ANSWERED : QUESTION_ROLE_TO_ANSWER
                 question =  { 
                         ...this.props.questions[questionId],
                         authorAvatarURL : this.props.users[this.props.questions[questionId].author].avatarURL,
