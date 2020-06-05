@@ -56,15 +56,15 @@ class Question extends Component {
             let percentageOfVoters;
             if (stats && value === QUESTION_OPTION_ONE) {
                 optionVoters = question.optionOne.votes.length;
-                percentageOfVoters = ((optionVoters / totalVoters) * 100)
+                percentageOfVoters = Math.round(((optionVoters / totalVoters) * 100))
             } else if (stats && value === QUESTION_OPTION_TWO) {
                 optionVoters = question.optionTwo.votes.length;
-                percentageOfVoters = ((optionVoters / totalVoters) * 100)
+                percentageOfVoters = Math.round(((optionVoters / totalVoters) * 100))
             }
 
-            text += `|#:${optionVoters}|%:${percentageOfVoters}`
+            text += ` |  #: ${optionVoters}| %: ${percentageOfVoters}`
 
-            if (checked) text += "|My Choice"
+            if (checked) text += " | My Choice"
         }
 
         return (
@@ -144,7 +144,9 @@ class Question extends Component {
                 buttonContent = this.formButtonMaker("Go to question", this.handleGoToQuestion)
                 break
             case QUESTION_ROLE_ANSWERED:
-                buttonContent = this.formButtonMaker("Go to question", this.handleGoToQuestion)
+                buttonContent = this.props.location.pathname === "/"? 
+                                    this.formButtonMaker("Go to question", this.handleGoToQuestion) :
+                                    ''
                 break
             case QUESTION_ROLE_TO_ANSWER:
                 buttonContent = this.formButtonMaker("Submit", this.handleSubmitAnswer)
