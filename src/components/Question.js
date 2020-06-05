@@ -144,7 +144,7 @@ class Question extends Component {
                 buttonContent = this.formButtonMaker("Go to question", this.handleGoToQuestion)
                 break
             case QUESTION_ROLE_ANSWERED:
-                buttonContent = ''
+                buttonContent = this.formButtonMaker("Go to question", this.handleGoToQuestion)
                 break
             case QUESTION_ROLE_TO_ANSWER:
                 buttonContent = this.formButtonMaker("Submit", this.handleSubmitAnswer)
@@ -164,19 +164,22 @@ class Question extends Component {
         } else  if (Object.keys(this.props.questions).length > 0) {
             const pathName = this.props.location.pathname
             const questionId = pathName.substring(pathName.lastIndexOf('/') + 1)
+            const authedUser = this.props.authedUser
             if (this.props.questions[questionId]) {
                 render404 = false
+                const questionRole = (this.props.questions[questionId].optionOne.votes.includes(authedUser) || 
+                    this.props.questions[questionId].optionTwo.votes.includes(authedUser)) ?
+                    QUESTION_ROLE_ANSWERED : QUESTION_ROLE_UNANSWERED
                 question =  { 
                         ...this.props.questions[questionId],
                         authorAvatarURL : this.props.users[this.props.questions[questionId].author].avatarURL,
                         authorName: this.props.users[this.props.questions[questionId].author].name,
-                        questionRole : QUESTION_ROLE_TO_ANSWER,
+                        questionRole : questionRole,
                     }
             }
         }
         
         if (render404) return <div>404 Question not found</div>
-        console.log('render again');
         return (
             <div className='question'>
                 <img
