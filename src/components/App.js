@@ -17,7 +17,10 @@ class App extends Component {
     }
     handleAppContent() {
         return this.props.authedUser === "" ?
-            <AuthedUser />
+            <Fragment>
+                <Nav />
+                <AuthedUser />
+            </Fragment>
             :
             (<div>
                 <AuthedUserBar />
