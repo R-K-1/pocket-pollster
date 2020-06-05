@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter} from 'react-router-dom'
 import { handleClearAuthedUser } from '../actions/shared'
 
 class AuthedUserBar extends Component {
     handleLogout = () => {
         this.props.dispatch(handleClearAuthedUser());
+        this.props.history.push('/')
     }
     AuthedUserBarContent = () => {
         return this.props.user === undefined?
@@ -42,4 +44,4 @@ function mapStateToProps ({ users, authedUser }) {
     }
 }
 
-export default connect(mapStateToProps)(AuthedUserBar);
+export default withRouter(connect(mapStateToProps)(AuthedUserBar))
