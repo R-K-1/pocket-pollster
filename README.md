@@ -1,4 +1,4 @@
-# WouldYouRather Project
+# Pocket Pollster Project
 
 This is an application demonstrating the power and simplicity of the React framework
 It enables users to create, answer, and view statistics about polls.
